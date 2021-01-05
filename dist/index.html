@@ -1,0 +1,401 @@
+<!--
+Copyright 2018 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta charset="utf-8">
+  <title>PWA News Reader</title>
+  <style>body{align-items:center;display:flex;flex-direction:column;font-family:Roboto,Helvetica,Arial,sans-serif;justify-content:space-between;margin:0;min-height:100vh}header{box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);box-sizing:border-box;display:flex;justify-content:center;padding:10px;width:100%}main{align-items:center;background-color:#f5f5f5;display:flex;flex-direction:column;flex-grow:1;justify-content:center;width:100%}.primary{background-color:#475b67;color:#fff}.secondary{color:#3f51b5}.primary a{color:#fff;text-decoration:none}.primary a:active,.primary a:focus,.primary a:hover{color:#000;text-decoration:underline}img{display:block;margin:0 auto;max-width:100%}.logo-container{align-items:center;display:flex;padding:0 10px 0 0}.logo{border-radius:50%;height:50px;width:50px}.loading-wrapper{align-items:center;display:flex;justify-content:center}.loading{animation:rotate 1s infinite linear;border:3px solid #607d8b;border-radius:50%;border-right-color:transparent;display:flex;height:40px;width:40px}@keyframes rotate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.install-wrapper{align-items:center;background-color:#3372e0;border:solid 1px;display:none;height:60px;justify-content:center;width:100%}.card{background-color:#fff;box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);margin:20px;max-width:600px;padding:10px 20px}.card-title{font-weight:500}.expandable{display:none}.question-wrapper{padding:15px 15px 0 15px}.question-text{border:1px solid #3f51b5;font-style:italic;font-weight:300;margin-bottom:15px;overflow-x:auto;padding:10px 15px 10px 15px}.comments-wrapper{padding:20px 10px 0 10px}.comment-text{border:1px solid #3f51b5;margin:10px;overflow-x:auto;padding:10px 10px 5px 10px}.removed{color:#3f51b5;font-style:italic;padding:5px 5px 5px 20px}.time{font-weight:200}.by{font-weight:500}.center{text-align:center}button{border:none;border-radius:2px;box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);cursor:pointer;display:inline-block;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;font-weight:500;height:36px;letter-spacing:0;min-width:64px;overflow:hidden;padding:0 16px;position:relative;text-align:center;vertical-align:middle}footer{align-items:center;box-sizing:border-box;display:flex;height:7vh;justify-content:center;min-height:50px;padding:10px;width:100%}
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,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bWFpbi5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuQ29weXJpZ2h0IDIwMTggR29vZ2xlIEluYy5cblxuTGljZW5zZWQgdW5kZXIgdGhlIEFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCAodGhlIFwiTGljZW5zZVwiKTtcbnlvdSBtYXkgbm90IHVzZSB0aGlzIGZpbGUgZXhjZXB0IGluIGNvbXBsaWFuY2Ugd2l0aCB0aGUgTGljZW5zZS5cbllvdSBtYXkgb2J0YWluIGEgY29weSBvZiB0aGUgTGljZW5zZSBhdFxuXG4gICAgaHR0cDovL3d3dy5hcGFjaGUub3JnL2xpY2Vuc2VzL0xJQ0VOU0UtMi4wXG5cblVubGVzcyByZXF1aXJlZCBieSBhcHBsaWNhYmxlIGxhdyBvciBhZ3JlZWQgdG8gaW4gd3JpdGluZywgc29mdHdhcmVcbmRpc3RyaWJ1dGVkIHVuZGVyIHRoZSBMaWNlbnNlIGlzIGRpc3RyaWJ1dGVkIG9uIGFuIFwiQVMgSVNcIiBCQVNJUyxcbldJVEhPVVQgV0FSUkFOVElFUyBPUiBDT05ESVRJT05TIE9GIEFOWSBLSU5ELCBlaXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLlxuU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZFxubGltaXRhdGlvbnMgdW5kZXIgdGhlIExpY2Vuc2UuXG4qL1xuYm9keSB7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGZvbnQtZmFtaWx5OiAnUm9ib3RvJywgJ0hlbHZldGljYScsICdBcmlhbCcsIHNhbnMtc2VyaWY7XG4gIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcbiAgbWFyZ2luOiAwO1xuICBtaW4taGVpZ2h0OiAxMDB2aDtcbn1cblxuaGVhZGVyIHtcbiAgYm94LXNoYWRvdzogMCAycHggMnB4IDAgcmdiYSgwLCAwLCAwLCAwLjE0KSwgMCAzcHggMXB4IC0ycHggcmdiYSgwLCAwLCAwLCAwLjIpLCAwIDFweCA1cHggMCByZ2JhKDAsIDAsIDAsIDAuMTIpO1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xuICBkaXNwbGF5OiBmbGV4O1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgcGFkZGluZzogMTBweDtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbm1haW4ge1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZXNtb2tlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBmbGV4LWdyb3c6IDE7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICB3aWR0aDogMTAwJTtcbn1cblxuLnByaW1hcnkge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiAjNDc1YjY3O1xuICBjb2xvcjogd2hpdGU7XG59XG5cbi5zZWNvbmRhcnkge1xuICBjb2xvcjogIzNmNTFiNTtcbn1cblxuLnByaW1hcnkgYSB7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xufVxuXG4ucHJpbWFyeSBhOmFjdGl2ZSxcbi5wcmltYXJ5IGE6aG92ZXIsXG4ucHJpbWFyeSBhOmZvY3VzIHtcbiAgY29sb3I6IGJsYWNrO1xuICB0ZXh0LWRlY29yYXRpb246IHVuZGVybGluZTtcbn1cblxuaW1nIHtcbiAgZGlzcGxheTogYmxvY2s7XG4gIG1hcmdpbjogMCBhdXRvO1xuICBtYXgtd2lkdGg6IDEwMCU7XG59XG5cbi5sb2dvLWNvbnRhaW5lciB7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIHBhZGRpbmc6IDAgMTBweCAwIDA7XG59XG5cbi5sb2dvIHtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xuICBoZWlnaHQ6IDUwcHg7XG4gIHdpZHRoOiA1MHB4O1xufVxuXG4ubG9hZGluZy13cmFwcGVyIHtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgZGlzcGxheTogZmxleDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG59XG5cbi5sb2FkaW5nIHtcbiAgYW5pbWF0aW9uOiByb3RhdGUgMXMgaW5maW5pdGUgbGluZWFyO1xuICBib3JkZXI6IDNweCBzb2xpZCAjNjA3ZDhiO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIGJvcmRlci1yaWdodC1jb2xvcjogdHJhbnNwYXJlbnQ7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGhlaWdodDogNDBweDtcbiAgd2lkdGg6IDQwcHg7XG59XG5cbkBrZXlmcmFtZXMgcm90YXRlIHtcbiAgMCUge1xuICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpO1xuICB9XG5cbiAgMTAwJSB7XG4gICAgdHJhbnNmb3JtOiByb3RhdGUoMzYwZGVnKTtcbiAgfVxufVxuXG4uaW5zdGFsbC13cmFwcGVyIHtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzMzNzJlMDtcbiAgYm9yZGVyOiBzb2xpZCAxcHg7XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGhlaWdodDogNjBweDtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIHdpZHRoOiAxMDAlO1xufVxuXG4uY2FyZCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICBib3gtc2hhZG93OiAwIDJweCAycHggMCByZ2JhKDAsIDAsIDAsIDAuMTQpLCAwIDNweCAxcHggLTJweCByZ2JhKDAsIDAsIDAsIDAuMiksIDAgMXB4IDVweCAwIHJnYmEoMCwgMCwgMCwgMC4xMik7XG4gIG1hcmdpbjogMjBweDtcbiAgbWF4LXdpZHRoOiA2MDBweDtcbiAgcGFkZGluZzogMTBweCAyMHB4O1xufVxuXG4uY2FyZC10aXRsZSB7XG4gIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG5cbi5leHBhbmRhYmxlIHtcbiAgZGlzcGxheTogbm9uZTtcbn1cblxuLnF1ZXN0aW9uLXdyYXBwZXIge1xuICBwYWRkaW5nOiAxNXB4IDE1cHggMCAxNXB4O1xufVxuXG4ucXVlc3Rpb24tdGV4dCB7XG4gIGJvcmRlcjogMXB4IHNvbGlkICMzZjUxYjU7XG4gIGZvbnQtc3R5bGU6IGl0YWxpYztcbiAgZm9udC13ZWlnaHQ6IDMwMDtcbiAgbWFyZ2luLWJvdHRvbTogMTVweDtcbiAgb3ZlcmZsb3cteDogYXV0bztcbiAgcGFkZGluZzogMTBweCAxNXB4IDEwcHggMTVweDtcbn1cblxuLmNvbW1lbnRzLXdyYXBwZXIge1xuICBwYWRkaW5nOiAyMHB4IDEwcHggMCAxMHB4O1xufVxuXG4uY29tbWVudC10ZXh0IHtcbiAgYm9yZGVyOiAxcHggc29saWQgIzNmNTFiNTtcbiAgbWFyZ2luOiAxMHB4O1xuICBvdmVyZmxvdy14OiBhdXRvO1xuICBwYWRkaW5nOiAxMHB4IDEwcHggNXB4IDEwcHg7XG59XG5cbi5yZW1vdmVkIHtcbiAgY29sb3I6ICMzZjUxYjU7XG4gIGZvbnQtc3R5bGU6IGl0YWxpYztcbiAgcGFkZGluZzogNXB4IDVweCA1cHggMjBweDtcbn1cblxuLnRpbWUge1xuICBmb250LXdlaWdodDogMjAwO1xufVxuXG4uYnkge1xuICBmb250LXdlaWdodDogNTAwO1xufVxuXG4uY2VudGVyIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufVxuXG5idXR0b24ge1xuICBib3JkZXI6IG5vbmU7XG4gIGJvcmRlci1yYWRpdXM6IDJweDtcbiAgYm94LXNoYWRvdzogMCAycHggMnB4IDAgcmdiYSgwLCAwLCAwLCAwLjE0KSwgMCAzcHggMXB4IC0ycHggcmdiYSgwLCAwLCAwLCAwLjIpLCAwIDFweCA1cHggMCByZ2JhKDAsIDAsIDAsIDAuMTIpO1xuICBjdXJzb3I6IHBvaW50ZXI7XG4gIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgZm9udC1mYW1pbHk6IFwiUm9ib3RvXCIsIFwiSGVsdmV0aWNhXCIsIFwiQXJpYWxcIiwgc2Fucy1zZXJpZjtcbiAgZm9udC1zaXplOiAxNHB4O1xuICBmb250LXdlaWdodDogNTAwO1xuICBoZWlnaHQ6IDM2cHg7XG4gIGxldHRlci1zcGFjaW5nOiAwO1xuICBtaW4td2lkdGg6IDY0cHg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIHBhZGRpbmc6IDAgMTZweDtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7XG59XG5cbmZvb3RlciB7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGhlaWdodDogN3ZoO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgbWluLWhlaWdodDogNTBweDtcbiAgcGFkZGluZzogMTBweDtcbiAgd2lkdGg6IDEwMCU7XG59XG4iXX0= */
+</style>
+
+  <link rel="manifest" href="/manifest.json">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PWA News Reader">
+  <meta name="apple-mobile-web-app-title" content="PWA News Reader">
+  <meta name="theme-color" content="#607d8b">
+  <meta name="msapplication-navbutton-color" content="#607d8b">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="msapplication-starturl" content="/index.html">
+
+  <link rel="icon" sizes="128x128" href="/images/touch/icon-128x128.png">
+  <link rel="apple-touch-icon" sizes="128x128" href="/images/touch/icon-128x128.png">
+  <link rel="icon" sizes="192x192" href="icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/images/touch/icon-192x192.png">
+  <link rel="icon" sizes="256x256" href="/images/touch/icon-256x256.png">
+  <link rel="apple-touch-icon" sizes="256x256" href="/images/touch/icon-256x256.png">
+  <link rel="icon" sizes="384x384" href="/images/touch/icon-384x384.png">
+  <link rel="apple-touch-icon" sizes="384x384" href="/images/touch/icon-384x384.png">
+  <link rel="icon" sizes="512x512" href="/images/touch/icon-512x512.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="/images/touch/icon-512x512.png">
+</head>
+
+<body>
+  <header class="primary raised">
+    <div class="logo-container">
+      <!-- image licensed CC0 - no attribution required, https://unsplash.com/photos/NuE8Nu3otjo -->
+      <img class="logo" src="images/logo.png" alt="The earth as seen from space with spacecraft in the foreground">
+    </div>
+    <h1>PWA 新聞台</h1>
+  </header>
+  <main>
+    <div class="loading-wrapper">
+      <div class="loading" id="loading"></div>
+    </div>
+    <div class="install-wrapper" id="install-wrapper">
+      <button class="primary" id="btn-install">Install App</button>
+    </div>
+    <div id="container">
+      <!-- content loaded dynamically -->
+    </div>
+  </main>
+  <footer class="primary">
+    <h3>
+      <a href="https://github.com/HackerNews/API">HN API</a>
+    </h3>
+  </footer>
+
+  <script src="https://cdn.polyfill.io/v2/polyfill.js?features=default,fetch"></script>
+  <script>/*
+* Copyright 2018 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+// Return event as a Promise, because we don't want to show it until
+// after our API data loads
+const deferredPromptPromise = new Promise((resolve, reject) => {
+
+  window.addEventListener('beforeinstallprompt', event => {
+
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    event.preventDefault();
+
+    resolve(event);
+  });
+});
+
+function tryInitInstallBtn() {
+
+  // Only initialize the install button if/after beforeinstallprompt event occurs
+  deferredPromptPromise.then(deferredPrompt => {
+
+    // Add install functionality to user gesture
+    const btnInstall = document.getElementById('btn-install');
+    btnInstall.addEventListener('click', () => {
+
+      // Show the prompt
+      deferredPrompt.prompt();
+
+      // Wait for the user to respond to the prompt
+      deferredPrompt.userChoice
+        .then(choiceResult => {
+          console.log('choiceResult', choiceResult);
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2HS prompt');
+          } else {
+            console.log('User dismissed the A2HS prompt');
+          }
+
+          // Hide our user interface interface
+          document.getElementById('install-wrapper').style.display = 'none';
+        });
+    });
+
+    // Show the user gesture interface
+    document.getElementById('install-wrapper').style.display = 'flex';
+  })
+}
+
+
+
+
+
+/*
+* Copyright 2018 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+function timeSince(time) {
+
+  const now = new Date();
+  const then = new Date(time * 1000);
+  const minSince = (now - then) / (1000 * 60);
+
+  if (minSince < 60) {
+    return `${Math.round(minSince)} minutes ago`;
+  }
+  return `${Math.round(minSince / 60)} hours ago`;
+}
+/*
+* Copyright 2018 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+const apiBaseUrl = 'https://hacker-news.firebaseio.com/v0';
+const newsUrl = 'http://newsapi.org/v2/top-headlines?' +'country=us&' +'apiKey=6b3d4dd345584e7c953a11d20dd1219b';
+const fetchJson = function (url) {
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response;
+    })
+    .then(response => response.json());
+};
+
+
+const fetchTopQuestions = function () {
+  
+  const topQuestionsUrl = `${apiBaseUrl}/askstories.json`;
+  return fetchJson(topQuestionsUrl)
+    .then(topQuestionIds => {
+      const questions = topQuestionIds
+        .slice(0, 30)
+        .map(questionId => {
+          let questionUrl = `${apiBaseUrl}/item/${questionId}.json`
+          return fetchJson(questionUrl);
+        });
+      return Promise.all(questions);
+    });
+};
+
+
+const renderComments = function (comments) {
+  return comments
+    .map(comment => {
+      let commentHtml = comment.deleted || comment.dead ?
+        `<p class="removed">Removed</p>` : `
+        <div class='comment'>
+          <span class="by secondary">by ${comment.by}</span>
+          <span class="time secondary">${timeSince(comment.time)}</span>
+          <div id=${comment.id} class='comment-text'>${comment.text}</div>
+        </div> `
+      return commentHtml;
+    })
+    .join('');
+};
+
+const toggleQuestionDetails = function (questionId, kidsIds) {
+  const expandableElem = document.getElementById(`expandable-${questionId}`);
+  expandableElem.style.display = (expandableElem.style.display === 'block') ?
+    'none' : 'block';
+  if (!kidsIds || kidsIds == 'undefined') {
+    return;
+  }
+  const loadingElem = document.getElementById(`loading-${questionId}`);
+  loadingElem.style.display = 'block';
+  const commentsElem = document.getElementById(`comments-${questionId}`);
+  commentsElem.style.display = 'none';
+
+  const commentIds = kidsIds.split(',');
+  return fetchComments(commentIds, questionId)
+    .then(comments => renderComments(comments))
+    .then(commentsHtml => {
+      loadingElem.style.display = 'none';
+      commentsElem.innerHTML = commentsHtml;
+      commentsElem.style.display = 'block';
+    })
+    .catch(err => {
+      console.log(err);
+      const errorHtml = `<p class="center">Uh oh, couldn\'t fetch comments 😥</p>`;
+      loadingElem.style.display = 'none';
+      commentsElem.innerHTML = errorHtml;
+      commentsElem.style.display = 'block';
+    });
+
+}
+const fetchComments = function (commentIds, questionId) {
+  const comments = commentIds.map(commentId => {
+    const commentUrl = `${apiBaseUrl}/item/${commentId}.json`;
+    return fetchJson(commentUrl);
+  });
+  console.log(comments);
+  return Promise.all(comments);
+
+};
+const fetchTopNews = function(){
+  const newsUrl = 'http://newsapi.org/v2/top-headlines?' +'country=us&' +'apiKey=6b3d4dd345584e7c953a11d20dd1219b';
+  
+  return fetchJson(newsUrl).then(
+    data =>{
+      return data.articles;
+    }
+  );
+
+}
+
+const renderNews = function (articles) {
+  return articles
+    .map(article => {
+      let articleHtml =
+        `<section class="card">
+        <h3 class="card-title">${article.title}</h3>
+        <p>
+          <span class="time secondary">${article.publishedAt} </span>
+          published by
+          <span class="by secondary"> ${article.source.name}</span>
+        </p>
+        <p>
+       
+        <img src='${article.urlToImage}'/>
+        ${article.description}
+        <a href=${article.url}>resource </a>
+        </p>
+      </section>`
+      return articleHtml;
+    })
+    .join('');
+};
+
+const renderQuestions = function (questions) {
+  return questions
+    .map(question => {
+      let questionHtml =
+        `<section class="card" id="${question.id}">
+        <h3 class="card-title">${question.title}</h3>
+        <p>
+          <span class="time secondary">${timeSince(question.time)} </span>
+          by
+          <span class="by secondary"> ${question.by}</span>
+        </p>
+        <p><span class="secondary">${question.score}</span> points</p>
+        ${question.text || question.kids ?
+          `<button onclick="toggleQuestionDetails('${question.id}', '${question.kids}')"
+            class="primary">
+              toggle
+          </button>
+          <div class="expandable" id="expandable-${question.id}">
+            <div class="question-details">
+              ${question.text ?
+            `<div class="question-wrapper">
+                  <div class="question-text">${question.text}</div>
+                </div>` : ''}
+              ${question.kids ?
+            `<div class="comments-wrapper">
+                  <div class="loading-wrapper">
+                    <div id="loading-${question.id}" class="loading"></div>
+                  </div>
+                  <div id="comments-${question.id}" class="comments"></div>
+                </div>` : ''}
+            </div>
+          </div>` : ''}
+      </section>`
+      return questionHtml;
+    })
+    .join('');
+};
+
+window.addEventListener('load', () => {
+  fetchTopNews()
+    .then(articles => {
+      const articlesHtml = renderNews(articles);
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('container').insertAdjacentHTML('beforeend', articlesHtml);
+      // Update UI to notify the user they can add to home screen
+      tryInitInstallBtn();
+    })
+    .catch(err => {
+      console.log(err);
+      const errorHtml = `<section><p>Uh oh, something went wrong 😥</p></section>`;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('container').insertAdjacentHTML('beforeend', errorHtml);
+    });
+  // fetchTopQuestions()
+  //   .then(questions => {
+  //     const questionsHtml = renderQuestions(questions);
+  //     document.getElementById('loading').style.display = 'none';
+  //     document.getElementById('container').insertAdjacentHTML('beforeend', questionsHtml);
+  //     // Update UI to notify the user they can add to home screen
+  //     tryInitInstallBtn();
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     const errorHtml = `<section><p>Uh oh, something went wrong 😥</p></section>`;
+  //     document.getElementById('loading').style.display = 'none';
+  //     document.getElementById('container').insertAdjacentHTML('beforeend', errorHtml);
+  //   });
+
+});
+
+
+
+/*
+* Copyright 2018 Google Inc. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('Service worker registered! 😎', reg);
+      })
+      .catch(err => {
+        console.log('😥 Service worker registration failed: ', err);
+      });
+  });
+}</script>
+
+</body>
+</html>
